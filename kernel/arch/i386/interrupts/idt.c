@@ -30,6 +30,7 @@ void interrupt_handler(struct cpu_state cpu, uint32_t interrupt, struct stack_st
 			code = keyboard_read();
 			handle_keypress(code);
 			pic_acknowledge(interrupt);
+			break;
 		default:
 			break;
 	}
@@ -44,7 +45,7 @@ static void create_descriptor(int index, uint32_t address) {
 }
 
 void	init_idt(void) {
-	idt_ptr.size = (sizeof(t_idt_entry) * 256);
+	idt_ptr.size = (sizeof(t_idt_entry) * 256) - 1;
 	idt_ptr.address = (uint32_t)&idt;
 
 	for (uint8_t vector = 0; vector < 32; vector++) {

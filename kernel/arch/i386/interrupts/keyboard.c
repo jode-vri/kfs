@@ -15,7 +15,7 @@
 #include <kernel/io.h>
 #include <libk.h>
 
-t_keyboard_state	keyboard_state;
+volatile t_keyboard_state	keyboard_state;
 
 char qwerty_table[128] = {
 	0x0, 0x0, '1', '2', '3', '4', '5', '6',
@@ -83,11 +83,12 @@ uint8_t	keyboard_read(void) {
 void	handle_keypress(uint8_t code) {
 	char	c;
 
-	if (code == 0 || code > 128)
+	if (code == 0 || code >= 128)
 		return ;
 	if (code >= 59 && code <= 62){
-		keyboard_state.c = -42;
+		keyboard_state.c = KEYBOARD_TTY_SWITCH;
 		tty_switch_screen(code);
+		return ;
 	}
 	if (keyboard_state.shift || keyboard_state.caps_lock)
 		c = qwerty_shift_table[code];

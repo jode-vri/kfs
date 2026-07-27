@@ -13,8 +13,8 @@
 #include <kernel/tty.h>
 #include <vga.h>
 
-t_tty		tty[4];
-uint16_t	cur_tty = 0;
+t_tty		tty[TTY_COUNT];
+volatile uint16_t	cur_tty = 0;
 uint16_t	*vga_buffer;
 
 void tty_draw(t_tty *t) {

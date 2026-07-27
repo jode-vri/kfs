@@ -38,7 +38,7 @@ void    print_kernel(uint32_t addr, int limit) {
             if(i != 0) {
                 last = addr - 16;
                 while (last < addr) {
-                    if (*(char *)last <= 32)
+                    if (*(uint8_t *)last < 32 || *(uint8_t *)last >= 127)
                         printk(".");
                     else
                         printk("%c", *(char *)last);
@@ -48,7 +48,7 @@ void    print_kernel(uint32_t addr, int limit) {
             }
             printk("%p: ", addr);
         }
-        print_hexa((uint32_t)c[i], buffer, 3);
+        print_hexa((uint8_t)c[i], buffer, 3);
         printk("%s ", buffer);
         addr++;
     }
@@ -60,10 +60,10 @@ void    print_kernel(uint32_t addr, int limit) {
     else
         last = addr - (limit % 16);
     while (last < addr) {
-        if (*(char *)last <= 32)
+        if (*(uint8_t *)last < 32 || *(uint8_t *)last >= 127)
             printk(".");
         else
-            printk("%c", (char *)last);
+            printk("%c", *(char *)last);
         last++;
     }
     printk("\n");

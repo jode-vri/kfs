@@ -16,10 +16,9 @@
 void	pic_acknowledge(unsigned int interrupt) {
 	if (interrupt < 0x20 || interrupt > 0x2F)
 		return;
-	if (interrupt < 0x28)
-		outb(0x20, 0x20);
-	else
+	if (interrupt >= 0x28)
 		outb(0xA0, 0x20);
+	outb(0x20, 0x20);
 }
 
 void	pic_remap(int offset1, int offset2) {
@@ -41,7 +40,7 @@ void	pic_remap(int offset1, int offset2) {
     outb(0xA1, 0x01);   // ICW4
 
     // Setup Interrupt Mask Register (IMR)
-    outb(0x21, 0xFD);   // Enable only IRQ2 (cascade) on the master PIC
+    outb(0x21, 0xFD);   // Enable only IRQ1 (keyboard) on the master PIC
     outb(0xA1, 0xFF);   // Disable all interrupts on the slave PIC
 
     asm("sti");         // Enable interrupts.

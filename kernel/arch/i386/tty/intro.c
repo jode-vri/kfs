@@ -14,15 +14,16 @@
 
 static void	print_centered(const char *s) {
 	size_t	len;
-	size_t	diff;
+	size_t	padding;
 
 	len = strlen(s);
-	diff = VGA_WIDTH - len;
-	for (size_t index = 0; index < diff / 2; index++)
+	padding = 0;
+	if (len < VGA_WIDTH)
+		padding = (VGA_WIDTH - len) / 2;
+	for (size_t index = 0; index < padding; index++)
 		putchar(' ');
 	putstr(s);
-	for (size_t index = 0; index < diff / 2; index++)
-		putchar(' ');
+	putchar('\n');
 }
 
 void	print_intro() {
