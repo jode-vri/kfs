@@ -16,36 +16,46 @@
 #include <libk.h>
 #include <kfs.h>
 
-static void	read_line(char *buffer) {
-	char		c = 0;
-	uint32_t	i = 0;
-	
+static void	read_line(void) {
+	char		c;
+	size_t		i;
+
+	i = strlen(tty[cur_tty].buffer);
 	while (42) {
 		c = keyboard_state.c;
 		keyboard_state.c = 0;
 		if (c == 0)
 			continue ;
-		if (strlen(tty[cur_tty].buffer) > 0)
+		if (c == KEYBOARD_TTY_SWITCH) {
 			i = strlen(tty[cur_tty].buffer);
-		else
-			i = 0;
+			continue ;
+		}
 		if (c == '\n') {
 			putchar(c);
 			return ;
 		}
 		if (keyboard_state.ctrl) {
 			if (c == 'l') {
-				memset(tty[cur_tty].buffer, 0, 256);
+				memset(tty[cur_tty].buffer, 0, TTY_INPUT_CAPACITY);
 				tty_initialize();
 				print_intro();
 				return ;
 			}
 		}
+		if (c == '\b') {
+			if (i > 0) {
+				tty[cur_tty].buffer[--i] = 0;
+				tty_backspace();
+			}
+			continue ;
+		}
+		if (!isprint(c))
+			continue ;
+		if (i >= TTY_INPUT_CAPACITY - 1)
+			continue ;
 		putchar(c);
-		tty[cur_tty].buffer[i] = c;
-		if (strlen(buffer) == 256)
-			return;
-		i++;
+		tty[cur_tty].buffer[i++] = c;
+		tty[cur_tty].buffer[i] = 0;
 	}
 }
 
@@ -72,8 +82,8 @@ static void run(void) {
 void		shell(void) {
 	while (42) {
 		printk("kfs > ");
-		memset(tty[cur_tty].buffer, 0, 256);
-		read_line(tty[cur_tty].buffer);
+		memset(tty[cur_tty].buffer, 0, TTY_INPUT_CAPACITY);
+		read_line();
 		if (strlen(tty[cur_tty].buffer) > 0){
 			run();
 		}

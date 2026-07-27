@@ -17,17 +17,20 @@
 #include <libk.h>
 #include <vga.h>
 
+#define TTY_COUNT 4
+#define TTY_INPUT_CAPACITY 256
+
 typedef struct	s_tty {
 	size_t		row;
 	size_t		column;
 	uint8_t		color;
 	
 	uint16_t	screen[VGA_WIDTH * VGA_HEIGHT];
-	char		buffer[256];
+	char		buffer[TTY_INPUT_CAPACITY];
 	
 }				t_tty;
-extern t_tty	tty[4];
-extern uint16_t	cur_tty;
+extern t_tty	tty[TTY_COUNT];
+extern volatile uint16_t	cur_tty;
 extern uint16_t	*vga_buffer;
 
 void tty_initialize(void);
@@ -40,5 +43,6 @@ void tty_switch_screen(int screen);
 
 void tty_color(uint8_t color);
 void tty_putchar(char c);
+void tty_backspace(void);
 
 #endif

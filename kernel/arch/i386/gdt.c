@@ -31,7 +31,7 @@ void    init_gdt() {
 	create_entry(0, 0, 0, 0, 0);                		// Null segment
 	create_entry(1, 0, 0xFFFFF, GDT_CODE_PL0, 0xCF);    // Kernel Code segment
 	create_entry(2, 0, 0xFFFFF, GDT_DATA_PL0, 0xCF);    // Kernel Data segment
-	create_entry(2, 0, 0xFFFFF, GDT_STACK_PL0, 0xCF);   // Kernel Stack segment
+	create_entry(3, 0, 0xFFFFF, GDT_STACK_PL0, 0xCF);   // Kernel Stack segment
 
 	create_entry(4, 0, 0xFFFFF, GDT_CODE_PL3, 0xCF);    // User Code segment
 	create_entry(5, 0, 0xFFFFF, GDT_DATA_PL3, 0xCF);    // User Data segment

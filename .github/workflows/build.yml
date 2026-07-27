@@ -1,0 +1,37 @@
+name: Build and boot
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  kfs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v7
+
+      - name: Install the toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends \
+            build-essential gcc-multilib binutils nasm \
+            grub-pc-bin grub-common xorriso mtools \
+            qemu-system-x86
+
+      - name: Build and validate the kernel
+        run: make check
+
+      - name: Boot and exercise the shell
+        run: make smoke-test
+
+      - name: Preserve the QEMU capture
+        uses: actions/upload-artifact@v7
+        with:
+          name: kfs-smoke-test
+          path: kfs-smoke-test.ppm

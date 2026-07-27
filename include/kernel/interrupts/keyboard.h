@@ -16,6 +16,7 @@
 #include <defines.h>
 
 #define KEYBOARD_DATA_PORT 0x60
+#define KEYBOARD_TTY_SWITCH (-42)
 
 typedef struct keyboard_state {
 	uint8_t	shift;
@@ -24,7 +25,7 @@ typedef struct keyboard_state {
 	uint8_t	caps_lock;
 	char	c;
 } t_keyboard_state;
-extern t_keyboard_state	keyboard_state;
+extern volatile t_keyboard_state	keyboard_state;
 
 
 uint8_t keyboard_read(void);
